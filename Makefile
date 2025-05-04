@@ -15,7 +15,7 @@ all: build
 
 build:
 	mkdir -p bin
-	go build -o bin/$(NAME).exe main.go
+	go build -o bin/$(NAME).exe src/main.go
 
 run:
 	go run .
