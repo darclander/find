@@ -1,1 +1,2 @@
-# find
+# find - a CLI tool for finding files
+Minor project for trying to replicate functionality in the [find utility](https://man7.org/linux/man-pages/man1/find.1.html) found in linux. Implemented in golang for fun fast functionalities!
