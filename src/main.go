@@ -10,9 +10,10 @@ import (
 )
 
 type Flags struct {
-    Name    string
-    Path    string
-    Debug   bool
+    Name        string
+    Path        string
+    Debug       bool
+    IncludeDirs bool
 }
 
 func colorTextRed(text string) string {
@@ -48,13 +49,16 @@ func process(path string, wg *sync.WaitGroup, flags Flags) {
 func main() {
     name := flag.String("name", "", "Name of file to search for")
     rootPath := flag.String("path", "./", "Path in which to search for files")
-    debug := flag.Bool("debug", false, "Enable debug output")
+    debug := flag.Bool("v", false, "Enable debug (verbose) output")
+    includeDirs := flag.Bool("d", false, "Look for dirs with the name as well")
+
     flag.Parse()
 
     flags := Flags {
         Name: *name,
         Path: *rootPath,
         Debug: *debug,
+        IncludeDirs: *includeDirs,
     }
     
     var wg sync.WaitGroup
@@ -63,7 +67,8 @@ func main() {
         if err != nil {
             return err
         }
-        if d.IsDir() {
+
+        if d.IsDir() && !flags.IncludeDirs {
             return nil
         }
 
