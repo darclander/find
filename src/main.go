@@ -14,6 +14,7 @@ type Flags struct {
     Path        string
     Debug       bool
     IncludeDirs bool
+    ExactMatch  bool
 }
 
 func colorTextRed(text string) string {
@@ -33,14 +34,17 @@ func process(path string, wg *sync.WaitGroup, flags Flags) {
 
     // Retrieve the name of the file
     filename := filepath.Base(path)
+    originalName := filename
     
-    // Convert to lowercase for matching, unless TODO: flags are set
-    filename = strings.ToLower(filename) 
+    // Convert to lowercase for matching, unless exactmatch is set
+    if (!flags.ExactMatch) {
+        filename = strings.ToLower(filename)
+    }
     
     // Handle 'find' rules
     if strings.Contains(filename, flags.Name) {
-        b := filename[:strings.Index(filename, flags.Name)]
-        a := filename[strings.Index(filename, flags.Name) + len(flags.Name):]
+        b := originalName[:strings.Index(filename, flags.Name)]
+        a := originalName[strings.Index(filename, flags.Name) + len(flags.Name):]
         r := b + colorTextRed(flags.Name) + a
         fmt.Printf("%s/%s\n", filepath.Dir(path), r)
     }
@@ -50,7 +54,8 @@ func main() {
     name := flag.String("name", "", "Name of file to search for")
     rootPath := flag.String("path", "./", "Path in which to search for files")
     debug := flag.Bool("v", false, "Enable debug (verbose) output")
-    includeDirs := flag.Bool("d", false, "Look for dirs with the name as well")
+    includeDirs := flag.Bool("d", false, "Also look for directories with the name")
+    exactMatch := flag.Bool("e", false, "Exact matching, e.g., case sensitive etc")
 
     flag.Parse()
 
@@ -59,6 +64,7 @@ func main() {
         Path: *rootPath,
         Debug: *debug,
         IncludeDirs: *includeDirs,
+        ExactMatch: *exactMatch,
     }
     
     var wg sync.WaitGroup
