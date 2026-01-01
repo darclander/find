@@ -51,11 +51,11 @@ func process(path string, wg *sync.WaitGroup, flags Flags) {
 }
 
 func main() {
-    name := flag.String("name", "", "Name of file to search for")
-    rootPath := flag.String("path", "./", "Path in which to search for files")
-    debug := flag.Bool("v", false, "Enable debug (verbose) output")
-    includeDirs := flag.Bool("d", false, "Also look for directories with the name")
-    exactMatch := flag.Bool("e", false, "Exact matching, e.g., case sensitive etc")
+    name := flag.String("name", "", "Name of file to search for.")
+    rootPath := flag.String("path", "./", "Path in which to search for files. (Default current directory)")
+    debug := flag.Bool("v", false, "Enable debug (verbose) output.")
+    includeDirs := flag.Bool("d", false, "Include directories in the search.")
+    exactMatch := flag.Bool("e", false, "Exact matching, e.g., case sensitive search.")
 
     flag.Parse()
 
